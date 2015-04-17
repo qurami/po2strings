@@ -1,10 +1,19 @@
 po2strings
 ==========
 
-po2strings is a tool to convert PO/POT gettext files into Apple .strings or Android/Java .xml files.
+po2strings is useful to convert PO/POT gettext files into Apple .strings or Android/Java .xml files.
 
-Usage
------
+
+Installation
+------------
+
+::
+
+  pip install git+ssh://git@github.com/giefferre/po2strings.git
+
+
+Command line usage
+------------------
 
 ::
 
@@ -17,3 +26,13 @@ e.g.
   root@host$ po2strings en.po Localizable.strings
 
   root@host$ po2strings en.po values.xml
+
+
+Code usage
+----------
+
+::
+
+  from po2strings import po2strings
+
+  executed, error_message = po2strings.run("en.po", "Localizable.strings")
