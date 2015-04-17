@@ -9,7 +9,7 @@ Installation
 
 ::
 
-  pip install git+ssh://git@github.com/giefferre/po2strings.git
+  pip install git+ssh://git@github.com/qurami/po2strings.git
 
 
 Command line usage
