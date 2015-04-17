@@ -51,7 +51,7 @@ setup(
     install_requires=REQUIREMENTS,
     entry_points={
         'console_scripts': [
-            'po2strings = po2strings.__main__:main',
+            'po2strings = po2strings.po2strings:main',
         ],
     },
 )

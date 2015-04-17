@@ -3,12 +3,11 @@
     po2strings
     ----------
 
-    This utility helps you to localise your Apple or Android application.
+    This utility helps you to localise your Apple or Android applications.
 
-    :author: Gianfranco Reppucci
     :copyright: (c) 2015 Qurami srl.
     :license: MIT, see LICENSE for more details.
 """
 
-VERSION = '0.1'
+VERSION = '0.2'
 __version__ = VERSION
