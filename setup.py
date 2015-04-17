@@ -3,9 +3,8 @@
     po2strings
     ----------
 
-    This utility helps you to localise your Apple or Android application.
+    This utility helps you to localise your Apple or Android applications.
 
-    :author: Gianfranco Reppucci
     :copyright: (c) 2015 Qurami srl.
     :license: MIT, see LICENSE for more details.
 """
@@ -31,7 +30,7 @@ setup(
     version=VERSION,
     url='http://qurami.com/',
     license='MIT',
-    description='po2strings convert PO/POT files into Apple .strings or Android .xml locale files.',
+    description='Converts PO/POT files into Apple .strings or Android .xml locale files.',
     long_description=LONG_DESCRIPTION,
     author='Gianfranco Reppucci',
     author_email='gianfranco.reppucci@qurami.net',
@@ -39,7 +38,7 @@ setup(
         #'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
