@@ -18,7 +18,12 @@ def _usage():
     print "Usage:", sys.argv[0], "<PO_FILE> <STRINGS_FILE>\n"
 
 
-def _create_context_id(string, addQuotes=True):
+def _create_context_id(string):
+    """
+    Context strings will be used as string keys,
+    so it is important to keep them unique from others
+    """
+
     s = string.replace(' ', '_')  # convert spaces to underscores
     s = re.sub(r'\W', '', s)      # strip any NON-word char
     s = re.sub(r'^\d+', '', s)    # strip digits at the beginning of a string
@@ -30,9 +35,8 @@ def _create_context_id(string, addQuotes=True):
         s = s[:55]
 
     s = "K%s_%s_%s" % (h1, s, h2)  # on Android, keys cannot begin with digits
+    s = "\"%s\"" % s
 
-    if addQuotes:
-        s = "\"%s\"" % s
     return s
 
 
@@ -45,9 +49,7 @@ def _clean_string(string):
 
 
 def _get_matches(poFile):
-    start = False
-
-    # thanks for help http://www.gossamer-threads.com/lists/python/dev/759682
+    # this was useful http://www.gossamer-threads.com/lists/python/dev/759682
     pattern = r"((msgctxt \"(?P<msgctxt>.*)\"\n)?msgid (?P<msgid>.*(?:\n\".*\")*))\nmsgstr (?P<msgstr>.*(?:\n\".*\")*)\n"
     prog = re.compile(pattern)
 
@@ -117,8 +119,7 @@ def compile_for_apple(poFile, stringsFile):
             value = m['string']
             value = value.replace('%s', '%@')
 
-            content = "\n/* %s */\n\"%s\" = \"%s\";\n" % (
-                m['context'],
+            content = "\n\"%s\" = \"%s\";\n" % (
                 identifier,
                 value
             )
