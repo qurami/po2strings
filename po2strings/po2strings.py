@@ -27,6 +27,7 @@ def _create_context_id(string):
     s = string.replace(' ', '_')  # convert spaces to underscores
     s = re.sub(r'\W', '', s)      # strip any NON-word char
     s = re.sub(r'^\d+', '', s)    # strip digits at the beginning of a string
+    s = s.upper()                 # uppercase everything
 
     h1 = hashlib.md5(string).hexdigest()[0:5]
     h2 = hashlib.md5(string).hexdigest()[5:10]
@@ -35,7 +36,6 @@ def _create_context_id(string):
         s = s[:55]
 
     s = "K%s_%s_%s" % (h1, s, h2)  # on Android, keys cannot begin with digits
-    s = "\"%s\"" % s
 
     return s
 
