@@ -9,7 +9,7 @@ Installation
 
 ::
 
-  pip install git+ssh://git@github.com/qurami/po2strings.git
+  pip install po2strings
 
 
 Command line usage

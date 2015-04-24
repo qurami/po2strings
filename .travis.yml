@@ -1,0 +1,13 @@
+language:
+- python
+python:
+- 2.7
+script:
+- echo "OK"
+deploy:
+  provider: pypi
+  user: qurami
+  password:
+    secure: Gh1pI0VNEhmlHXIolrb2tqAD2Ejn7854hLFIfAOq3c4VWNgK/OLrJ1a+9U9YzKsL6P+fhIZvSlzb9mhhvlzjZYAAka5Se2iniQ/KyfA0ZhcTu62c/EMeZmUPwXemh33phG/S4cGAT+ddh9G4L4uyLqOZtGUZWEoMnR0LZgPBibw=
+  on:
+    branch: master
