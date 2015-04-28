@@ -89,12 +89,12 @@ def compile_for_android(poFile, stringsFile):
             value = value.replace('>', '&gt;')
             value = value.replace('\\"', '"')
             value = value.replace("'", "\\'")
-            value = value.replace('%@', '%d')
+            value = value.replace('%d', '%s')
 
-            count = value.count('%d')
+            count = value.count('%s')
 
             for index in range(1, (count + 1)):
-                value = value.replace('%d', '%s%s$s' % ('%', index), 1)
+                value = value.replace('%s', '%s%s$s' % ('%', index), 1)
 
             content = "\t<string name=\"%s\">%s</string>\n" % (
                 m['context'],
