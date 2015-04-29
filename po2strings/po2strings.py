@@ -85,6 +85,10 @@ def compile_for_android(poFile, stringsFile):
 
         for m in matches:
             value = m['string']
+
+            if value == "":
+                value = m['id']
+
             value = value.replace('<', '&lt;')
             value = value.replace('>', '&gt;')
             value = value.replace('\\"', '"')
@@ -118,6 +122,9 @@ def compile_for_apple(poFile, stringsFile):
 
             value = m['string']
             value = value.replace('%s', '%@')
+
+            if value == "":
+                value = identifier
 
             content = "\n\"%s\" = \"%s\";\n" % (
                 identifier,
