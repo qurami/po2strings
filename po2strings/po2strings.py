@@ -41,10 +41,15 @@ def _create_context_id(string):
 
 
 def _clean_string(string):
-    string = re.sub("\n", "", string)
-    string = re.sub('""', '', string)
-    string = re.sub(r'^"', '', string)
-    string = re.sub(r'"$', '', string)
+    parts = string.split("\n")
+    newParts = []
+    for part in parts:
+        part = re.sub(r'^"', '', part)
+        part = re.sub(r'"$', '', part)
+        newParts.append(part)
+        
+    string = "".join(newParts)
+
     return string
 
 
