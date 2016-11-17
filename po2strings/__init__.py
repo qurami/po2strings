@@ -5,7 +5,7 @@
 
     This utility helps you to localise your Apple or Android applications.
 
-    :copyright: (c) 2015 Qurami srl.
+    :copyright: (c) 2016 Qurami srl.
     :license: MIT, see LICENSE for more details.
 """
 
