@@ -33,7 +33,7 @@ setup(
     description='Converts PO/POT files into Apple .strings or Android .xml locale files.',
     long_description=LONG_DESCRIPTION,
     author='Gianfranco Reppucci',
-    author_email='gianfranco.reppucci@qurami.net',
+    author_email='gianfranco.reppucci@qurami.com',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
