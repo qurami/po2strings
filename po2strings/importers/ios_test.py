@@ -33,7 +33,7 @@ class iOSImporterTest(unittest.TestCase):
         self.assertEqual(sut.matches, self.mock_matches)
         self.assertEqual(sut.destination_file, self.mock_destination_file)
     
-    # test that iOSImporter class run creates an XML file containing input matches
+    # test that iOSImporter class run creates a .strings file containing input matches
     def test_run(self):
         sut = ios.iOSImporter(
             self.mock_matches,
