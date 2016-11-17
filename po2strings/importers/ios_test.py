@@ -14,8 +14,6 @@ class iOSImporterTest(unittest.TestCase):
             }
         ]
         self.mock_destination_file = 'mock_destination_ios.strings'
-        def mock_context_id_generator(s): return 'MOCK_CONTEXT_ID'
-        self.mock_context_id_generator = mock_context_id_generator
 
     def tearDown(self):
         try:
