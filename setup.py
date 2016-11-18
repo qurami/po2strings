@@ -46,7 +46,9 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     packages=['po2strings'],
-    package_data={},
+    package_data={
+        'po2strings': ['importers/*']
+    },
     zip_safe=False,
     install_requires=REQUIREMENTS,
     entry_points={
