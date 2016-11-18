@@ -7,7 +7,7 @@ import time
 import datetime
 import hashlib
 
-from importers import android, ios
+from importers import android, ios, arb
 
 class Po2StringsConverter:
     importer = None
@@ -25,6 +25,8 @@ class Po2StringsConverter:
             self.importer = android.AndroidImporter(matches, strings_file)
         elif os.path.splitext(strings_file)[1] == ".strings":
             self.importer = ios.iOSImporter(matches, strings_file)
+        elif os.path.splitext(strings_file)[1] == ".arb":
+            self.importer = arb.ArbImporter(matches, strings_file)
         else:
             raise Exception("Strings file format not supported for file %s" % (strings_file))
 
