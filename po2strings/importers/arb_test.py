@@ -27,6 +27,11 @@ class ArbImporterTest(unittest.TestCase):
                 "context": "CONTEXT4",
                 "id": "Your cart contains %d items",
                 "string": "Il tuo carrello contiene %d oggetti"
+            },
+            {
+                "context": "CONTEXT5",
+                "id": "String with missing translation",
+                "string": ""
             }
         ]
         self.mock_destination_file = 'mock_destination_arb.arb'
@@ -47,6 +52,11 @@ class ArbImporterTest(unittest.TestCase):
         "placeholders": {
             "itemCounter": {}
         }
+    },
+    "untranslatedString": "String with missing translation",
+    "@untranslatedString": {
+        "type": "text",
+        "placeholders": {}
     }
 }'''
             arb_file.write(mock_arb_file)
@@ -153,6 +163,11 @@ class ArbImporterTest(unittest.TestCase):
         "placeholders": {
             "itemCounter": {}
         }
+    },
+    "untranslatedString": "String with missing translation",
+    "@untranslatedString": {
+        "type": "text",
+        "placeholders": {}
     }
 }''')
 

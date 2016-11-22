@@ -133,7 +133,7 @@ class ArbImporter:
 
                             # if they do match, we can put the translated string
                             # into arb_file_as_dict[key[1:]]
-                            if translated_string_id == untraslated_string:
+                            if translated_string_id == untraslated_string and m['string'] != '':
                                 each_string_to_parse['string'] = self.clean_string(m['string'])
                                 strings_found_in_po.append(each_string_to_parse)
 
