@@ -78,7 +78,7 @@ class ArbImporter:
         # open the arb file and convert it to a dictionary
         # using json.load (arb is JSON in fact), then close the file
         with open(self.destination_file, 'r') as arb_file:
-            arb_file_as_dict = json.load(arb_file)
+            arb_file_as_dict = json_load_byteified(arb_file)
             arb_file.close()
 
         # cycle the arb dictionary
@@ -166,8 +166,10 @@ class ArbImporter:
         
         # save the arb_file_as_dict as self.destination_file
         with open(self.destination_file, 'w+') as sf:
-            json.dump(arb_file_as_dict, sf)
-            sf.close()def _byteify(data, ignore_dicts = False):
+            json.dump(arb_file_as_dict, sf, ensure_ascii=False)
+            sf.close()
+
+def _byteify(data, ignore_dicts = False):
     # if this is a unicode string, return its string representation
     if isinstance(data, unicode):
         return data.encode('utf-8')
