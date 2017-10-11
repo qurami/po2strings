@@ -78,7 +78,7 @@ class ArbImporter:
         # open the arb file and convert it to a dictionary
         # using json.load (arb is JSON in fact), then close the file
         with open(self.destination_file, 'r') as arb_file:
-            arb_file_as_dict = json.load(arb_file)
+            arb_file_as_dict = json_load_byteified(arb_file)
             arb_file.close()
 
         # cycle the arb dictionary
@@ -88,83 +88,108 @@ class ArbImporter:
                 # keys without it hold the string
 
                 placeholders = []
-                if key[0] == '@':
-                    # get placeholders for current key
-                    for placeholder in arb_file_as_dict[key]['placeholders']:
-                        placeholders.append(placeholder)
+                if key[0] != '@':
+                    continue
 
-                    # get string...
-                    source_string = arb_file_as_dict[key[1:]]
+                # get placeholders for current key
+                for placeholder in arb_file_as_dict[key]['placeholders']:
+                    placeholders.append(placeholder)
 
-                    # on plural strings, we'll split the string into multiple
-                    # entries, because they are stored separately into the PO
-                    # translations file
+                # get string...
+                source_string = arb_file_as_dict[key[1:]]
 
-                    # set if it is singular case
-                    strings_to_parse_for_key = [{
-                        'plural_case': 'single',
-                        'string': source_string,
-                        'ordered_placeholders': self.get_ordered_placeholders(source_string)
-                    }]
-                    plural = False
-                    plural_placeholder = None
+                # on plural strings, we'll split the string into multiple
+                # entries, because they are stored separately into the PO
+                # translations file
 
-                    # now check if plural
-                    for placeholder in placeholders:
-                        if "{%s,plural" % placeholder in source_string:
-                            strings_to_parse_for_key = self.split_plural_string(source_string, placeholder, placeholders)
-                            plural_placeholder = placeholder
-                            plural = True
-                            break
+                # set if it is singular case
+                strings_to_parse_for_key = [{
+                    'plural_case': 'single',
+                    'string': source_string,
+                    'ordered_placeholders': self.get_ordered_placeholders(source_string)
+                }]
+                plural = False
+                plural_placeholder = None
 
-                    # prepare an empty array of strings found in PO file
-                    strings_found_in_po = []
+                # now check if plural
+                for placeholder in placeholders:
+                    if "{%s,plural" % placeholder in source_string:
+                        strings_to_parse_for_key = self.split_plural_string(source_string, placeholder, placeholders)
+                        plural_placeholder = placeholder
+                        plural = True
+                        break
 
-                    # for each string to parse for current key
-                    for each_string_to_parse in strings_to_parse_for_key:
-                        untraslated_string = self.clean_placeholders(
-                            each_string_to_parse['string'],
-                            placeholders
+                # prepare an empty array of strings found in PO file
+                strings_found_in_po = []
+
+                # for each string to parse for current key
+                for each_string_to_parse in strings_to_parse_for_key:
+                    untraslated_string = self.clean_placeholders(
+                        each_string_to_parse['string'],
+                        placeholders
+                    )
+
+                    # search for matches in translated PO file
+                    for m in self.matches:
+                        translated_string_id = self.clean_string(m['id'])
+
+                        # if they do match, we can put the translated string
+                        # into arb_file_as_dict[key[1:]]
+                        if translated_string_id == untraslated_string and m['string'] != '':
+                            each_string_to_parse['string'] = self.clean_string(m['string'])
+                            strings_found_in_po.append(each_string_to_parse)
+
+                if len(strings_found_in_po) > 0:
+                    # if the string is not plural we can just restore
+                    # its ordered placeholders
+                    if not plural:
+                        translation = strings_found_in_po[0]['string']
+                        for placeholder in strings_found_in_po[0]['ordered_placeholders']:
+                            translation = translation.replace('%s', "{%s}" % placeholder, 1)
+                    
+                    # if it is plural, we have to rejoin the plural string
+                    # according to the specific format
+                    else:
+                        translation = ''
+                        for string_entry in strings_found_in_po:
+                            for placeholder in string_entry['ordered_placeholders']:
+                                string_entry['string'] = string_entry['string'].replace('%s', "{%s}" % placeholder, 1)
+                            translation += "%s{%s}" % (string_entry['plural_case'], string_entry['string'])
+                        
+                        translation = "%s,plural, %s}" % (
+                            source_string[:source_string.find(',plural, ')],
+                            translation
                         )
-
-                        # search for matches in translated PO file
-                        for m in self.matches:
-                            translated_string_id = self.clean_string(m['id'])
-
-                            # if they do match, we can put the translated string
-                            # into arb_file_as_dict[key[1:]]
-                            if translated_string_id == untraslated_string and m['string'] != '':
-                                each_string_to_parse['string'] = self.clean_string(m['string'])
-                                strings_found_in_po.append(each_string_to_parse)
-
-                    if len(strings_found_in_po) > 0:
-                        # if the string is not plural we can just restore
-                        # its ordered placeholders
-                        if not plural:
-                            translation = strings_found_in_po[0]['string']
-                            for placeholder in strings_found_in_po[0]['ordered_placeholders']:
-                                translation = translation.replace('%s', "{%s}" % placeholder, 1)
-                        
-                        # if it is plural, we have to rejoin the plural string
-                        # according to the specific format
-                        else:
-                            translation = ''
-                            for string_entry in strings_found_in_po:
-                                for placeholder in string_entry['ordered_placeholders']:
-                                    string_entry['string'] = string_entry['string'].replace('%s', "{%s}" % placeholder, 1)
-                                translation += "%s{%s}" % (string_entry['plural_case'], string_entry['string'])
-                            
-                            translation = "%s,plural, %s}" % (
-                                source_string[:source_string.find(',plural, ')],
-                                translation
-                            )
-                        
-                        # eventually, we replace the original string with its translation
-                        arb_file_as_dict[key[1:]] = translation
+                    
+                    # eventually, we replace the original string with its translation
+                    arb_file_as_dict[key[1:]] = translation
             except Exception, e:
                 print "Exception on key %s" % key, e
         
         # save the arb_file_as_dict as self.destination_file
         with open(self.destination_file, 'w+') as sf:
-            json.dump(arb_file_as_dict, sf)
+            json.dump(arb_file_as_dict, sf, ensure_ascii=False)
             sf.close()
+
+def _byteify(data, ignore_dicts = False):
+    # if this is a unicode string, return its string representation
+    if isinstance(data, unicode):
+        return data.encode('utf-8')
+    # if this is a list of values, return list of byteified values
+    if isinstance(data, list):
+        return [ _byteify(item, ignore_dicts=True) for item in data ]
+    # if this is a dictionary, return dictionary of byteified keys and values
+    # but only if we haven't already byteified it
+    if isinstance(data, dict) and not ignore_dicts:
+        return {
+            _byteify(key, ignore_dicts=True): _byteify(value, ignore_dicts=True)
+            for key, value in data.iteritems()
+        }
+    # if it's anything else, return it in its original form
+    return data
+
+def json_load_byteified(file_handle):
+    return _byteify(
+        json.load(file_handle, object_hook=_byteify),
+        ignore_dicts=True
+    )
