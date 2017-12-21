@@ -122,6 +122,7 @@ def main():
             print "OK"
         except Exception, e:
             print e
+            sys.exit(1)
     else:
         _usage()
 
